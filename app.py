@@ -335,6 +335,7 @@ def search_artists():
   }
   return render_template('pages/search_artists.html', results=response, search_term=request.form.get('search_term', ''))
 
+
 @app.route('/artists/<int:artist_id>')
 def show_artist(artist_id):
   artists = db.session.query(Artist).all()
