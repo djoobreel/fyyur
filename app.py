@@ -104,10 +104,10 @@ def venues():
   data = []
   for venue in venues:
     venue_data = {
-    "id": venue.id,
-    "name": venue.name,
-    "num_upcoming_shows": 0
-    }
+    "city": venue.city,
+    "state": venue.state,
+    "name": venue.name
+     }
     data.append(venue_data)
   # TODO: replace with real venues data.
   #       num_upcoming_shows should be aggregated based on number of upcoming shows per venue.
@@ -132,7 +132,7 @@ def venues():
   #     "num_upcoming_shows": 0,
   #   }]
   # }]
-  return render_template('pages/venues.html', venues=data);
+  return render_template('pages/venues.html', venues=data)
 
 @app.route('/venues/search', methods=['POST'])
 def search_venues():
@@ -325,6 +325,14 @@ def create_venue_submission():
 
 @app.route('/venues/<venue_id>', methods=['DELETE'])
 def delete_venue(venue_id):
+  venues = db.session.query(Venue).all()
+  for venue in venues:
+    db.session.delete(venue)
+    db.session.commit()
+    db.session.close()
+
+  
+
   # TODO: Complete this endpoint for taking a venue_id, and using
   # SQLAlchemy ORM to delete a record. Handle cases where the session commit could fail.
 
