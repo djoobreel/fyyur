@@ -514,11 +514,36 @@ def edit_artist(artist_id):
     "image_link": artist_data.image_link
   }
   # TODO: populate form with fields from artist with ID <artist_id>
-  form["name"]=artist_data.name
+  #form.name(artist_data.name)
   return render_template('forms/edit_artist.html', form=form, artist=artist)
 
 @app.route('/artists/<int:artist_id>/edit', methods=['POST'])
 def edit_artist_submission(artist_id):
+  name = request.form.get('name')
+  city = request.form.get('city')
+  state = request.form.get('state')
+  phone = request.form.get('phone')
+  image_link = request.form.get('image_link')
+  facebook_link = request.form.get('facebook_link')
+  website_link = request.form.get('website_link')
+  seeking_description = request.form.get('seeking_description')
+  seeking_venue = request.form.get('seeking_venue')
+  genres = request.form.get('genres')
+  
+  artist_data = db.session.query(Artist).get(artist_id)
+
+  artist_data.name = name
+  artist_data.city = city
+  artist_data.state = state
+  artist_data.phone = phone
+  artist_data.image_link = image_link
+  artist_data.facebook_link = facebook_link
+  artist_data.website_link = website_link
+  artist_data.seeking_description = seeking_description
+  artist_data.seeking_venue = bool(seeking_venue)
+  artist_data.genres = genres
+
+  db.session.commit()
   # TODO: take values from the form submitted, and update existing
   # artist record with ID <artist_id> using the new attributes
 
