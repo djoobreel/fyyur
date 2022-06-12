@@ -568,7 +568,8 @@ def create_artist_submission():
   seeking_description = request.form.get('seeking_description')
   seeking_venue = request.form.get('seeking_venue')
   genres = request.form.get('genres')
-  artist = Artist(
+  try:
+    artist = Artist(
                 name=name,
                 city=city,
                 state=state,
@@ -580,16 +581,17 @@ def create_artist_submission():
                 seeking_description=seeking_description,
                 seeking_venue=bool(seeking_venue)
                 )
-  db.session.add(artist)
-  db.session.commit()
+    db.session.add(artist)
+    db.session.commit()
   
   # called upon submitting the new artist listing form
   # TODO: insert form data as a new Venue record in the db, instead
   # TODO: modify data to be the data object returned from db insertion
   # on successful db insert, flash success
-  flash('Artist ' + request.form['name'] + ' was successfully listed!')
+    flash('Artist ' + request.form['name'] + ' was successfully listed!')
   # TODO: on unsuccessful db insert, flash an error instead.
-  # e.g., flash('An error occurred. Artist ' + data.name + ' could not be listed.')
+  except:
+    flash('An error occurred. Artist ' + name + ' could not be listed.')
   return render_template('pages/home.html')
 
 
@@ -667,6 +669,7 @@ def create_show_submission():
   venue_id = request.form.get('venue_id')
   start_time = request.form.get('start_time')
   artist = db.session.query(Artist).get(int(artist_id))
+  
   form = ShowForm()
   if not artist:
     flash("artist id cannot be found, Cannot create show")
@@ -675,21 +678,23 @@ def create_show_submission():
   if not artist:
     flash("venue id cannot be found,Cannot create show")
     return render_template('forms/new_show.html', form=form)
-  show = Show(
+  try:
+    show = Show(
             artist_id=artist_id,
             venue_id=venue_id,
             start_time=start_time,
               )
   
-  db.session.add(show)
-  db.session.commit()
+    db.session.add(show)
+    db.session.commit()
   # called to create new shows in the db, upon submitting new show listing form
   # TODO: insert form data as a new Show record in the db, instead
 
   # on successful db insert, flash success
-  flash('Show was successfully listed!')
+    flash('Show was successfully listed!')
   # TODO: on unsuccessful db insert, flash an error instead.
-  # e.g., flash('An error occurred. Show could not be listed.')
+  except:
+    flash('An error occurred. Show could not be listed.')
   # see: http://flask.pocoo.org/docs/1.0/patterns/flashing/
   return render_template('pages/home.html')
 
